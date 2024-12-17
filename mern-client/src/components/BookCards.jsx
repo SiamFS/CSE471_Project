@@ -11,13 +11,11 @@ const BookCard = ({ headline, books }) => {
   const [hoveredBook, setHoveredBook] = useState(null);
   const { user } = useContext(AuthContext);
   const [availableBooks, setAvailableBooks] = useState([]);
-
   useEffect(() => {
     const filteredBooks = books.filter(book => book.availability !== "sold");
     setAvailableBooks(filteredBooks);
   }, [user, books]);
 
-  
   return (
     <div className='my-16 px-4 lg:px-24'>
       <h2 className='text-5xl text-center font-bold text-gray-800 pb-10'>{headline}</h2>
@@ -94,5 +92,4 @@ const BookCard = ({ headline, books }) => {
     </div>
   );
 };
-
 export default BookCard;
