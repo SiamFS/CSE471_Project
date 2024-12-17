@@ -138,7 +138,7 @@ const UploadBook = () => {
   };
 
   if (!user) {
-    return <p>Loading...</p>; // Or redirect to login page
+    return <h2 className="text-3xl font-bold text-center mt-8">Please login to upload book</h2>;  
   }
 
   return (

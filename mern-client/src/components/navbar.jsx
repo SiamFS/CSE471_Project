@@ -8,9 +8,9 @@ function Navbar() {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [isSticky, setSticky] = useState(false);
     const [isProfileOpen, setProfileOpen] = useState(false);
-    const { user} = useContext(AuthContext);
+    const { user, updateUserProfile } = useContext(AuthContext);
     const [searchTerm, setSearchTerm] = useState('');
-    const [cartCount] = useState(0);
+    const [cartCount, setCartCount] = useState(0);
     const navigate = useNavigate();
     const profileRef = useRef(null);
     const fileInputRef = useRef(null);
@@ -79,11 +79,38 @@ function Navbar() {
     };
 
 
+    const handleProfilePictureClick = () => {
+        fileInputRef.current.click();
+    };
+
+
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('image', file);
+           
+            try {
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=47bd3a08478085812d1960523ecd71ba`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json();
+                if (data.success) {
+                    await updateUserProfile({ photoURL: data.data.url });
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+    };
+
+
     const navItems = [
         { link: 'Home', path: '/' },
         { link: 'About', path: '/about' },
         { link: 'Shop', path: '/shop' },
-        { link: 'Sell your book', path: '/dashboard/upload' },
+        { link: 'Sell your book', path: '/dashboard' },
         { link: 'Blog', path: '/blog' },
     ];
 
@@ -118,9 +145,17 @@ function Navbar() {
                                     <div className={`absolute mt-2 w-64 bg-blue-200 rounded-lg shadow-xl py-2 px-4 ${getDropdownPositionClass()}`} style={{ minWidth: '200px' }}>
                                         <p className="text-center text-sm text-gray-600 mb-2">{`${user.firstName} ${user.lastName}`}</p>
                                         <p className="text-center text-sm text-gray-600 mb-2">{user.email}</p>
+                                        <button
+                                            onClick={handleProfilePictureClick}
+                                            className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 mb-2"
+                                        >
+                                            <FaCamera className="mr-2" />
+                                            {user.photoURL === "https://i.ibb.co/yWjpDXh/image.png" ? "Upload Profile Picture" : "Update Profile Picture"}
+                                        </button>
                                         <input
                                             type="file"
                                             ref={fileInputRef}
+                                            onChange={handleFileChange}
                                             accept="image/*"
                                             className="hidden"
                                         />
