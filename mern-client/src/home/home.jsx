@@ -1,6 +1,7 @@
 import React from 'react'
 import Banner from '../components/Banner'
-import LatestBooks from './LatestBooks'
+import CategoryBooks from './CategoryBooks'
+import FavoriteBooks from './LatestBooks'
 
 
 
@@ -8,7 +9,9 @@ const Home = () => {
   return (
     <div>
       <Banner />
-      <LatestBooks />
+      <CategoryBooks />
+      <FavoriteBooks />
+      
     </div>
   )
 }
